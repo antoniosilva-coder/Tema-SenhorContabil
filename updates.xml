@@ -2,7 +2,7 @@
 <gupdate xmlns="http://www.google.com/update2/response" protocol="2.0">
   <app appid="blebikojnakioblpeacdnnphclgeeaha">
     <updatecheck
-      codebase="https://antoniosilva-coder.github.io/Tema-SenhorContabil/tema-senhor-contabil.crx"
-      version="1.0.1" />
+      codebase="https://github.com/antoniosilva-coder/Tema-SenhorContabil/blob/fee66c65d51554b707d5ea2890e480801c31a096/tema-senhor-contabil.crx"
+      version="1.0.0" />
   </app>
 </gupdate>
