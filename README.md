@@ -295,456 +295,171 @@ deployment/configs-setores/
 
 # Configurações disponíveis por setor
 
-Atualmente o `schema.json` permite controlar:
+O `schema.json` declara as propriedades aceitas pela extensão. **Ele não usa `Value`.**
 
-| Propriedade | Função |
-|---|---|
-| `setor` | Nome administrativo do setor |
-| `tituloPagina` | Título exibido na aba |
-| `wallpaperUrl` | Wallpaper usado pelo setor |
-| `faviconUrl` | Ícone da nova guia |
-| `corPrimaria` | Cor principal da interface |
-| `corDestaque` | Cor usada nos destaques |
-| `mostrarRelogio` | Exibe ou oculta o relógio |
-| `placeholderPesquisa` | Texto exibido dentro da busca |
-| `mostrarGmail` | Exibe ou oculta o Gmail no canto direito |
-| `gmailUrl` | URL usada pelo atalho do Gmail |
-| `mostrarMenuGoogle` | Exibe ou oculta o botão de nove pontos |
-| `tituloMenuGoogle` | Título interno do menu |
-| `atalhos` | Lista de atalhos centrais |
-| `appsGoogle` | Lista de aplicativos do menu |
-
----
-
-# Exemplo de política para um setor
+No **Google Admin > Política para extensões**, cada propriedade deve ser enviada no formato:
 
 ```json
 {
-  "setor": "Fiscal",
-  "tituloPagina": "Senhor Contábil - Fiscal",
-  "wallpaperUrl": "https://exemplo.com/wallpaper-fiscal.png",
-  "mostrarRelogio": true,
-  "atalhos": [
-    {
-      "nome": "Sistema Fiscal",
-      "url": "https://sistema.exemplo/",
-      "icone": "https://sistema.exemplo/icone.png",
-      "fallback": "F",
-      "iconeLargo": false
-    },
-    {
-      "nome": "Minha Jornada",
-      "url": "https://minhajornada-sso.senhorcontabil.com.br/",
-      "icone": "https://antoniosilva-coder.github.io/Tema-SenhorContabil/Logo-Contabil.png",
-      "fallback": "J",
-      "iconeLargo": false
-    }
-  ]
+  "nomeDaPolitica": {
+    "Value": "valor"
+  }
 }
 ```
 
----
+Depois da validação pelo Chrome, `chrome.storage.managed` entrega à extensão somente o valor:
 
-# Como funciona a configuração por setor
+```javascript
+{
+  nomeDaPolitica: "valor"
+}
+```
 
-Fluxo:
+Atualmente são aceitas: `setor`, `tituloPagina`, `wallpaperUrl`, `faviconUrl`, `corPrimaria`, `corDestaque`, `mostrarRelogio`, `placeholderPesquisa`, `mostrarGmail`, `gmailUrl`, `mostrarMenuGoogle`, `tituloMenuGoogle`, `atalhos` e `appsGoogle`.
+
+# Exemplo correto para o Google Admin
+
+```json
+{
+  "setor": {
+    "Value": "Fiscal"
+  },
+  "tituloPagina": {
+    "Value": "Senhor Contábil - Fiscal"
+  },
+  "mostrarRelogio": {
+    "Value": false
+  },
+  "atalhos": {
+    "Value": [
+      {
+        "nome": "Sistema Fiscal",
+        "url": "https://sistema.exemplo/",
+        "icone": "https://sistema.exemplo/icone.png",
+        "fallback": "F",
+        "iconeLargo": false
+      }
+    ]
+  }
+}
+```
+
+# Fluxo da política
 
 ```text
-config-default.js
-       ↓
-configuração padrão da empresa
-       ↓
-Google Admin envia a política da OU/grupo
-       ↓
+schema.json (tipos permitidos, sem Value)
+        ↓
+Google Admin > Política para extensões
+{ chave: { Value: valor } }
+        ↓
+Chrome valida a política
+        ↓
 chrome.storage.managed
-       ↓
-newtab.js mescla as configurações
-       ↓
-nova guia é renderizada
+{ chave: valor }
+        ↓
+newtab.js aplica a configuração
 ```
-
-Exemplo:
-
-```text
-Mesma extensão
-      │
-      ├── OU Fiscal    → configuração Fiscal
-      ├── OU RH        → configuração RH
-      ├── OU Contábil  → configuração Contábil
-      └── OU TI        → configuração TI
-```
-
-Não é necessário gerar um CRX diferente para cada setor.
-
----
 
 # Como configurar no Google Admin
 
-1. Acesse o Google Admin.
-2. Vá em **Dispositivos > Chrome > Apps e extensões > Usuários e navegadores**.
-3. Selecione a OU ou grupo desejado.
-4. Abra a extensão **Tema Senhor Contábil**.
-5. Localize **Política para extensões**.
-6. Informe o JSON correspondente ao setor.
-7. Salve a política.
-8. No computador de teste, abra:
-
-```text
-chrome://policy
-```
-
-9. Atualize as políticas.
-10. Abra uma nova guia.
-
----
-
-# Configuração padrão
-
-O arquivo:
-
-```text
-extension/config-default.js
-```
-
-é usado quando nenhuma política específica é entregue ao navegador.
-
-Ele funciona como o padrão global da empresa.
-
-Exemplo conceitual:
+1. Acesse **Dispositivos > Chrome > Apps e extensões**.
+2. Selecione a OU ou grupo desejado.
+3. Abra **Tema Senhor Contábil**.
+4. Localize **Política para extensões**.
+5. Cole/importa o JSON no formato com `Value`.
+6. Salve.
+7. Abra `chrome://policy` no computador e clique em **Recarregar políticas**.
+8. Feche e abra uma nova guia.
+9. No Console da nova guia, valide:
 
 ```javascript
-window.SENHOR_CONTABIL_DEFAULT_CONFIG = {
-  setor: "Geral",
-  tituloPagina: "Senhor Contábil",
-  wallpaperUrl: "https://.../wallpaper.png",
-  mostrarRelogio: true,
-  mostrarGmail: true,
-  mostrarMenuGoogle: true,
-  atalhos: [],
-  appsGoogle: []
-};
-```
-
----
-
-# Como alterar sem gerar um novo CRX
-
-Não é necessário atualizar a extensão quando a alteração puder ser realizada através de uma propriedade já existente no `schema.json`.
-
-Exemplos:
-
-- trocar wallpaper de um setor;
-- adicionar/remover atalhos;
-- trocar URL de um sistema;
-- trocar ícone de um atalho;
-- esconder Gmail;
-- esconder o menu de aplicativos;
-- alterar os aplicativos do menu;
-- mudar cores;
-- mudar título;
-- esconder o relógio.
-
-Nesse caso basta alterar a política da OU/grupo no Google Admin.
-
----
-
-# Quando é obrigatório gerar um novo CRX
-
-É necessário publicar uma nova versão quando houver alteração em código ou estrutura da extensão, como:
-
-- `manifest.json`;
-- `schema.json`;
-- `config-default.js`;
-- `newtab.html`;
-- `newtab.js`;
-- `styles.css`;
-- arquivos locais dentro de `assets/`;
-- inclusão de uma nova permissão;
-- criação de uma nova funcionalidade;
-- criação de uma nova propriedade que ainda não exista no `schema.json`.
-
-Fluxo de atualização:
-
-```text
-1. alterar o código
-2. aumentar a versão no manifest.json
-3. gerar novamente o CRX usando a MESMA chave privada
-4. alterar a versão no updates.xml
-5. substituir o CRX publicado
-6. publicar o novo updates.xml
-```
-
-Exemplo:
-
-```text
-1.2.1 → 1.2.2
-```
-
-A versão declarada no `manifest.json` e no `updates.xml` deve ser a mesma.
-
----
-
-# Atualização do wallpaper sem atualizar a extensão
-
-Se `wallpaperUrl` apontar para uma imagem externa e o arquivo remoto for substituído mantendo exatamente o mesmo caminho e nome, a extensão poderá receber a nova imagem sem gerar outro CRX.
-
-Exemplo:
-
-```text
-https://antoniosilva-coder.github.io/Tema-SenhorContabil/wallpaper-senhor-contabil.png
-```
-
-Mantendo essa URL e substituindo apenas o conteúdo de `wallpaper-senhor-contabil.png`, a nova imagem será carregada quando o cache for renovado.
-
-Pode existir atraso causado pelo cache do navegador/CDN.
-
----
-
-# Estrutura de exceções por grupo
-
-O Google Admin pode ser usado com OUs para regras padrão e grupos para exceções.
-
-Exemplo conceitual:
-
-```text
-OU Fiscal
-└── bloqueio de WhatsApp = true
-
-Grupo EXC - WhatsApp
-└── bloqueio de WhatsApp = false
-```
-
-Assim, um usuário pode continuar pertencendo ao setor Fiscal e receber somente a exceção necessária através do grupo.
-
-## Atenção
-
-A propriedade `bloquearWhatsapp` **não existe na v1.2.1 atual**.
-
-O código atual gerencia a aparência e os atalhos da nova guia. Para transformar esse exemplo em uma função real da extensão seria necessário adicionar uma nova implementação, por exemplo:
-
-1. adicionar `bloquearWhatsapp` ao `schema.json`;
-2. adicionar a lógica de bloqueio/redirecionamento;
-3. solicitar as permissões necessárias no `manifest.json`;
-4. aumentar a versão;
-5. gerar e publicar um novo CRX.
-
-Depois que a propriedade existir, a OU pode definir o padrão e um grupo de exceção pode sobrescrever somente esse valor.
-
-### Recomendação de organização
-
-```text
-OUs
-├── Fiscal
-├── Contábil
-├── RH
-├── Financeiro
-└── TI
-
-Grupos de exceção
-├── EXC - WhatsApp
-├── EXC - Gemini
-├── EXC - Redes Sociais
-└── EXC - Sistemas TI
-```
-
-Evite criar várias OUs apenas por causa de exceções individuais.
-
----
-
-# Como criar uma extensão desse modelo do zero
-
-## 1. Estrutura mínima
-
-```text
-extension/
-├── manifest.json
-├── schema.json
-├── config-default.js
-├── newtab.html
-├── newtab.js
-├── styles.css
-└── assets/
-```
-
-## 2. Manifesto
-
-Exemplo mínimo:
-
-```json
-{
-  "manifest_version": 3,
-  "name": "Nova Guia Corporativa",
-  "version": "1.0.0",
-  "permissions": [
-    "storage"
-  ],
-  "storage": {
-    "managed_schema": "schema.json"
-  },
-  "chrome_url_overrides": {
-    "newtab": "newtab.html"
-  }
-}
-```
-
-## 3. Schema de políticas
-
-Exemplo:
-
-```json
-{
-  "type": "object",
-  "properties": {
-    "setor": {
-      "type": "string"
-    },
-    "wallpaperUrl": {
-      "type": "string"
-    },
-    "mostrarRelogio": {
-      "type": "boolean"
-    }
-  }
-}
-```
-
-## 4. Configuração padrão
-
-```javascript
-window.DEFAULT_CONFIG = {
-  setor: "Geral",
-  wallpaperUrl: "https://exemplo.com/wallpaper.png",
-  mostrarRelogio: true
-};
-```
-
-## 5. Leitura da política
-
-```javascript
-chrome.storage.managed.get(null, (policy) => {
-  const config = {
-    ...window.DEFAULT_CONFIG,
-    ...policy
-  };
-
-  console.log(config);
+chrome.storage.managed.get(null, config => {
+  console.log("POLÍTICA:", config);
+  console.log("ERRO:", chrome.runtime.lastError?.message || "nenhum");
 });
 ```
 
-A partir daí, os valores de `config` são usados para montar a página.
+Um teste mínimo recomendado no Admin é:
 
----
-
-# Empacotamento e chave privada
-
-Para manter o mesmo ID da extensão, todas as atualizações devem ser empacotadas usando a **mesma chave privada `.pem`**.
-
-A chave privada:
-
-- não deve ser enviada para o GitHub;
-- não deve ser compartilhada;
-- não deve ficar dentro do pacote público da extensão;
-- deve possuir backup seguro.
-
-Se uma nova chave for usada, o Chrome gera outro ID e passa a considerar o pacote como outra extensão.
-
----
-
-# Arquivo `updates.xml`
-
-A extensão auto-hospedada utiliza o `updates.xml` para informar ao Chrome onde está o CRX e qual é a versão disponível.
-
-Em cada atualização:
-
-```text
-manifest.json = nova versão
-updates.xml   = mesma nova versão
+```json
+{
+  "tituloPagina": {
+    "Value": "TESTE VIA GOOGLE ADMIN"
+  },
+  "mostrarRelogio": {
+    "Value": false
+  },
+  "placeholderPesquisa": {
+    "Value": "POLÍTICA APLICADA"
+  }
+}
 ```
 
-Exemplo:
+# Teste local definitivo no Windows
 
-```xml
-<updatecheck
-  codebase="https://antoniosilva-coder.github.io/Tema-SenhorContabil/tema-senhor-contabil.crx"
-  version="1.2.2" />
+Para separar problema da extensão de problema do Admin, injete uma política temporária pelo Registro:
+
+```powershell
+$P = "HKLM:\SOFTWARE\Policies\Google\Chrome\3rdparty\extensions\blebikojnakioblpeacdnnphclgeeaha\policy"
+New-Item -Path $P -Force
+New-ItemProperty -Path $P -Name "tituloPagina" -PropertyType String -Value "TESTE LOCAL FUNCIONOU" -Force
+New-ItemProperty -Path $P -Name "mostrarRelogio" -PropertyType DWord -Value 0 -Force
 ```
 
----
+Reinicie o Chrome e consulte:
 
-# Testes antes da publicação
-
-Para testar uma versão local:
-
-1. abra `chrome://extensions`;
-2. habilite **Modo do desenvolvedor**;
-3. clique em **Carregar sem compactação**;
-4. selecione a pasta `extension`;
-5. faça as alterações;
-6. use **Recarregar** na extensão;
-7. abra novamente a nova guia.
-
-Se a extensão de produção estiver instalada à força por política com o mesmo ID, o Chrome pode impedir o carregamento da cópia local.
-
-Nesse cenário, utilize:
-
-- uma OU de testes sem a instalação forçada; ou
-- uma versão DEV com outro ID.
-
----
-
-# Distribuição corporativa
-
-Para uso empresarial, recomenda-se:
-
-- instalar a extensão através do Google Admin;
-- utilizar instalação forçada;
-- manter a mesma URL de atualização;
-- manter o mesmo ID;
-- armazenar a chave `.pem` somente em local seguro;
-- validar políticas em `chrome://policy`;
-- testar atualizações primeiro em uma OU/grupo de TI;
-- somente depois liberar para toda a empresa.
-
----
-
-# Resumo da evolução
-
-```text
-v1.1.0
-Nova guia corporativa básica
-        ↓
-v1.1.2
-Atalhos Sólides / Minha Jornada / Movidesk
-        ↓
-v1.1.3
-Gmail + menu de nove pontos
-        ↓
-v1.1.4
-Ícones externos e remoção da permissão favicon
-        ↓
-v1.1.5
-Melhoria de contraste do menu superior
-        ↓
-v1.1.6
-Ícones corrigidos + fallback automático
-        ↓
-v1.1.7
-Calendar + Docs + Sheets + Meet
-        ↓
-v1.1.8
-Padronização visual/nomenclatura dos apps
-        ↓
-v1.2.0
-Experimento de integração com Google Calendar API
-        ↓
-v1.2.1
-Remoção do OAuth da Agenda + configuração dinâmica por setor
+```javascript
+chrome.storage.managed.get(null, console.log)
 ```
 
----
+Se aparecerem os valores, `manifest.json`, `schema.json` e `chrome.storage.managed` estão funcionando.
 
-## Versão atual recomendada
+Remova o teste depois:
 
-**v1.2.1 — configuração por setor via `chrome.storage.managed`.**
+```powershell
+Remove-Item "HKLM:\SOFTWARE\Policies\Google\Chrome\3rdparty\extensions\blebikojnakioblpeacdnnphclgeeaha\policy" -Recurse -Force
+```
 
-Essa é a base recomendada para as próximas evoluções do projeto.
+# Diagnóstico
+
+| Resultado | Problema provável |
+|---|---|
+| Registro não funciona | extensão/schema |
+| Registro funciona, Admin não aparece em `chrome://policy` | aplicação/escopo no Admin |
+| Admin aparece com erro | JSON/tipo incompatível com schema |
+| `storage.managed` tem valores | política entregue corretamente |
+| valores chegam mas tela não muda | `newtab.js` / aplicação visual |
+
+# Configuração padrão
+
+`extension/config-default.js` continua sendo o fallback usado quando nenhuma política é entregue ao navegador.
+
+# Alterações que não exigem novo CRX
+
+Não é necessário gerar outro CRX para mudar valores de propriedades já existentes no `schema.json`, como wallpaper, atalhos, links, cores, visibilidade do relógio/Gmail/menu e título.
+
+# Quando é obrigatório gerar novo CRX
+
+Gere nova versão quando alterar código, estrutura, permissões, `schema.json`, `config-default.js`, HTML/CSS/JS ou assets locais. Use a mesma chave `.pem` para manter o ID estável e atualize a versão também no `updates.xml`.
+
+# Atualização do wallpaper
+
+Se `wallpaperUrl` aponta para uma imagem externa, o arquivo pode ser substituído mantendo o mesmo caminho sem gerar novo CRX. Pode haver atraso por cache/CDN.
+
+# Observação sobre exceções
+
+Se futuramente forem criadas políticas como `bloquearWhatsapp`, primeiro essa propriedade precisa existir no `schema.json` e a extensão precisa implementar a funcionalidade. Só então ela poderá ser enviada pelo Admin no mesmo formato:
+
+```json
+{
+  "bloquearWhatsapp": {
+    "Value": false
+  }
+}
+```
+
+# Referências oficiais
+
+- Chrome managed storage: https://developer.chrome.com/docs/extensions/reference/manifest/storage
+- Chrome Enterprise — Apps e extensões: https://support.google.com/chrome/a/answer/6177447
+- Chromium — Configuring Apps and Extensions by Policy: https://www.chromium.org/administrators/configuring-policy-for-extensions/
