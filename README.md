@@ -2,13 +2,13 @@
 
 Extensão corporativa Manifest V3 que substitui a página de **Nova guia** do Google Chrome por uma página institucional da Senhor Contábil.
 
-A versão atual do projeto é a **v1.2.1**, com suporte a configuração diferente por setor através de políticas gerenciadas do Chrome/Google Admin.
+A versão atual do projeto é a **v1.2.2**, com suporte a configuração diferente por setor através de políticas gerenciadas do Chrome/Google Admin.
 
 **ID estável da extensão:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ---
 
-## Estado atual — v1.2.1
+## Estado atual — v1.2.2
 
 A versão atual possui:
 
@@ -224,13 +224,17 @@ https://www.googleapis.com/auth/calendar.readonly
 
 ### Importante
 
-A integração de Agenda da v1.2.0 foi **removida da linha atual na v1.2.1**.
+A integração de Agenda da v1.2.0 foi **removida da linha atual a partir da v1.2.1**.
 
 A versão atual não solicita acesso ao Google Calendar. O item `Calendar` é apenas um link.
 
 ---
 
 ## v1.2.1 — Configuração por setor
+
+Introdução do suporte a `chrome.storage.managed` e configuração por setor.
+
+## v1.2.2 — Política gerenciada corrigida
 
 Esta é a arquitetura atual do projeto.
 
