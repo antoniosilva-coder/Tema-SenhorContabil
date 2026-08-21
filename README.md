@@ -4,9 +4,11 @@ Extensão Manifest V3 que substitui a página de nova guia por uma versão corpo
 
 - wallpaper institucional fixo;
 - relógio e pesquisa do Google;
+- atalhos corporativos Sólides, Minha Jornada e Movidesk;
+- acesso rápido no canto superior direito com Gmail e menu de apps (Gmail, Google Chat, Drive, Gemini, Google Calendar, Google Docs, Google Sheets e Google Meet);
 - identidade visual nas cores da Senhor Contábil;
 - nenhuma opção de troca de wallpaper dentro da nova guia;
-- zero permissões de acesso a páginas ou dados do usuário.
+- não solicita acesso à agenda, e-mail ou conteúdo das páginas; os itens do menu são apenas atalhos.
 
 ID estável da versão auto-hospedada: `blebikojnakioblpeacdnnphclgeeaha`.
 
@@ -78,3 +80,23 @@ Ao alterar a extensão:
 - https://chromeenterprise.google/policies/browser-theme-color/
 - https://support.google.com/chrome/a/answer/7532015
 - https://support.google.com/chrome/a/answer/9302896
+
+## v1.1.8
+- Ícones oficiais adicionados para Calendar, Docs, Sheets e Meet no menu de aplicativos.
+- Os ícones são carregados diretamente dos assets públicos do Google (`gstatic.com`).
+
+## v1.2.1 - Página diferente por setor
+
+A mesma extensão agora aceita configuração gerenciada via `chrome.storage.managed`.
+
+É possível definir no Google Admin, por OU/grupo, sem gerar CRX novo:
+- wallpaper;
+- título da página;
+- cores principais;
+- relógio;
+- texto da pesquisa;
+- atalhos centrais;
+- Gmail e menu de nove pontos;
+- lista de aplicativos do menu.
+
+Veja `CONFIGURAR-POR-SETOR.md` e os exemplos em `deployment/configs-setores/`.
