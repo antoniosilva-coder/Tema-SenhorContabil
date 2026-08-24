@@ -1,18 +1,19 @@
 # Tema Senhor Contábil — Chrome
 
-Extensão corporativa Manifest V3 para nova guia, políticas por setor e bloqueio de sites.
+Extensão corporativa Manifest V3 para personalização da nova guia por política gerenciada do Chrome.
 
-**Versão:** `1.4.2`  
+**Versão:** `1.5.0`  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ## Recursos
 
 - nova guia corporativa com pesquisa, Gemini e atalhos;
 - configuração por `chrome.storage.managed`;
-- bloqueio de sites com tela **Oops!**;
 - wallpaper responsivo;
-- página de versão e diagnóstico;
+- página de versão;
 - atualização automática via CRX/XML.
+
+> A partir da v1.5.0, a extensão não realiza bloqueio personalizado de sites.
 
 ## Página de versão
 
@@ -22,43 +23,40 @@ Na pesquisa da nova guia:
 sr://version
 ```
 
-Na barra do Chrome, sem instalar protocolo:
+Na barra do Chrome:
 
 ```text
 sr + Espaço + version
 ```
 
-Para usar **`sr://version` diretamente na barra de endereços do Windows**, execute uma vez:
+Para habilitar `sr://version` diretamente no Windows:
 
 ```powershell
 .\deployment\Instalar-Protocolo-SR.ps1 -Test
 ```
 
-O instalador registra `sr://` para o usuário atual. Use `-Machine` em PowerShell Administrador para registrar para a máquina.
+## Google Admin
 
-## JSON no Google Admin
+Exemplo de política:
 
 ```json
 {
   "setor": { "Value": "Fiscal" },
-  "sitesBloqueados": { "Value": ["web.whatsapp.com", "discord.com"] },
-  "sitesLiberados": { "Value": [] }
+  "tituloPagina": { "Value": "Senhor Contábil - Fiscal" },
+  "mostrarRelogio": { "Value": true }
 }
 ```
-
-## v1.4.2
-
-- corrige regressão que fazia as regras de bloqueio não serem recriadas de forma confiável;
-- simplifica a sincronização do `declarativeNetRequest`;
-- preserva regras existentes enquanto a política cloud ainda está carregando;
-- sincroniza novamente após início, atualização e mudança de política;
-- aceita domínios, URLs completas, `*.dominio.com` e `*://dominio.com/*`;
-- mantém a página personalizada **Oops!** e a página de versão.
 
 ## Publicar
 
 1. mantenha a mesma chave privada `.pem`;
 2. gere o CRX da pasta `extension`;
-3. publique o CRX e `deployment/updates.xml`.
+3. publique o CRX e `deployment/updates.xml`;
+4. nunca publique a chave `.pem`.
 
-Nunca publique a chave `.pem`.
+## v1.5.0
+
+- remove o bloqueio personalizado de sites;
+- remove a página `Oops!` e regras dinâmicas de bloqueio;
+- remove `sitesBloqueados`, `sitesLiberados` e `mensagemBloqueio` do schema;
+- mantém nova guia, políticas por setor, Gemini, wallpaper e página de versão.
