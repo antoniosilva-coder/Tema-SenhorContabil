@@ -1,10 +1,8 @@
 # Tema Senhor Contábil — Chrome
 
-Extensão corporativa Manifest V3 para personalização da nova guia por política gerenciada do Chrome.
+Extensão corporativa Manifest V3 para nova guia e políticas internas do Chrome.
 
-**Versão:** `1.5.2`  
-
-**1.5.2:** correção visual dos atalhos para impedir recorte de ícones e efeitos de foco/hover.  
+**Versão:** `1.6.0`  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ## Recursos
@@ -12,29 +10,41 @@ Extensão corporativa Manifest V3 para personalização da nova guia por políti
 - nova guia corporativa com pesquisa, Gemini e atalhos;
 - configuração por `chrome.storage.managed`;
 - wallpaper responsivo;
+- bloqueio de sites por domínio com página **Oops!** personalizada;
+- exceções de liberação por domínio/subdomínio;
+- suporte ao bloqueio no Incógnito quando a extensão está autorizada nele;
 - atualização automática via CRX/XML.
 
-> A extensão não realiza bloqueio personalizado de sites.
+## Bloqueio de sites
 
-## Desempenho
+O bloqueio usa `declarativeNetRequest`: as regras ficam no próprio Chrome e não existe JavaScript interceptando cada clique.
 
-A v1.5.2 reduz trabalho e rede na abertura da nova guia:
-
-- wallpaper padrão local em WebP;
-- wallpaper remoto carregado em baixa prioridade;
-- evita renderização duplicada quando a política é igual ao padrão;
-- ícones externos usam prioridade baixa;
-- remove blur contínuo dos elementos sempre visíveis.
-
-Para o melhor desempenho, quando usar o wallpaper padrão no Google Admin, use:
+No Google Admin, em **Política para extensões**:
 
 ```json
 {
-  "wallpaperUrl": { "Value": "assets/wallpaper-senhor-contabil.webp" }
+  "sitesBloqueados": {
+    "Value": [
+      "discord.com",
+      "web.whatsapp.com"
+    ]
+  },
+  "sitesLiberados": {
+    "Value": []
+  },
+  "mensagemBloqueio": {
+    "Value": "Se você precisa deste acesso para o trabalho, entre em contato com o setor de TI."
+  }
 }
 ```
 
-Use URL HTTPS apenas quando um setor realmente precisar de wallpaper remoto.
+Aceita também entradas como `https://discord.com/`, `*.discord.com` e `*://discord.com/*`.
+
+Uma entrada em `sitesLiberados` tem prioridade. Exemplo: bloquear `google.com` e liberar `drive.google.com`.
+
+## Incógnito
+
+O manifesto usa `"incognito": "split"` para que a página **Oops!** possa abrir dentro de uma janela anônima. A extensão ainda precisa estar autorizada a funcionar no Incógnito pela política/gerenciamento do Chrome.
 
 ## Publicar
 
