@@ -2,7 +2,7 @@
 
 Extensão corporativa Manifest V3 para personalização da nova guia por política gerenciada do Chrome.
 
-**Versão:** `1.5.0`  
+**Versão:** `1.5.1`  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ## Recursos
@@ -10,42 +10,29 @@ Extensão corporativa Manifest V3 para personalização da nova guia por políti
 - nova guia corporativa com pesquisa, Gemini e atalhos;
 - configuração por `chrome.storage.managed`;
 - wallpaper responsivo;
-- página de versão;
 - atualização automática via CRX/XML.
 
-> A partir da v1.5.0, a extensão não realiza bloqueio personalizado de sites.
+> A extensão não realiza bloqueio personalizado de sites.
 
-## Página de versão
+## Desempenho
 
-Na pesquisa da nova guia:
+A v1.5.1 reduz trabalho e rede na abertura da nova guia:
 
-```text
-sr://version
-```
+- wallpaper padrão local em WebP;
+- wallpaper remoto carregado em baixa prioridade;
+- evita renderização duplicada quando a política é igual ao padrão;
+- ícones externos usam prioridade baixa;
+- remove blur contínuo dos elementos sempre visíveis.
 
-Na barra do Chrome:
-
-```text
-sr + Espaço + version
-```
-
-Para habilitar `sr://version` diretamente no Windows:
-
-```powershell
-.\deployment\Instalar-Protocolo-SR.ps1 -Test
-```
-
-## Google Admin
-
-Exemplo de política:
+Para o melhor desempenho, quando usar o wallpaper padrão no Google Admin, use:
 
 ```json
 {
-  "setor": { "Value": "Fiscal" },
-  "tituloPagina": { "Value": "Senhor Contábil - Fiscal" },
-  "mostrarRelogio": { "Value": true }
+  "wallpaperUrl": { "Value": "assets/wallpaper-senhor-contabil.webp" }
 }
 ```
+
+Use URL HTTPS apenas quando um setor realmente precisar de wallpaper remoto.
 
 ## Publicar
 
@@ -53,10 +40,3 @@ Exemplo de política:
 2. gere o CRX da pasta `extension`;
 3. publique o CRX e `deployment/updates.xml`;
 4. nunca publique a chave `.pem`.
-
-## v1.5.0
-
-- remove o bloqueio personalizado de sites;
-- remove a página `Oops!` e regras dinâmicas de bloqueio;
-- remove `sitesBloqueados`, `sitesLiberados` e `mensagemBloqueio` do schema;
-- mantém nova guia, políticas por setor, Gemini, wallpaper e página de versão.
