@@ -2,7 +2,7 @@
 
 Extensão corporativa Manifest V3 para personalizar a nova guia do Chrome e aplicar configurações por política gerenciada.
 
-**Versão:** `1.3.5`  
+**Versão:** `1.3.7`  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ## Recursos
@@ -17,7 +17,7 @@ Extensão corporativa Manifest V3 para personalizar a nova guia do Chrome e apli
 
 ## Wallpaper responsivo
 
-Na v1.3.5 o wallpaper usa a nova arte 16:9 e `cover`, com enquadramento ancorado na parte inferior. A nova guia e a página **Oops!** usam exatamente a mesma regra de tamanho e posição, então ao abrir um bloqueio o fundo permanece com o mesmo enquadramento da tela anterior. O `wallpaperUrl` continua configurável pelo JSON.
+Na v1.3.7 o wallpaper continua em 16:9 com `cover` e enquadramento ancorado na parte inferior. A página **Oops!** mantém a mesma escala/posição da nova guia, mas aplica uma camada escura com blur sobre todo o fundo para a arte ficar discreta e a mensagem de bloqueio ganhar destaque. O `wallpaperUrl` continua configurável pelo JSON.
 
 ## JSON no Google Admin
 
@@ -105,7 +105,7 @@ chrome.runtime.getManifest().version
 Deve retornar:
 
 ```text
-1.3.5
+1.3.7
 ```
 
 ## Atualização do CRX
@@ -136,10 +136,9 @@ extension/
 
 Configurações de exemplo ficam em `deployment/configs-setores/`.
 
+## v1.3.7
 
-## v1.3.5
-
-- Wallpaper principal mantido em proporção 16:9, sem ficar superdimensionado em viewports fora de 16:9.
-- Mesma escala e posição na nova guia e na tela Oops!.
-- Fundo excedente preenchido com cópia desfocada da própria arte.
-- Blur do painel Oops! reforçado.
+- Mantém o wallpaper 16:9 em `cover`, sem barras laterais.
+- Nova guia e Oops! usam o mesmo enquadramento.
+- No Oops!, o fundo inteiro fica escurecido e desfocado; o wallpaper aparece apenas de forma sutil.
+- Painel de bloqueio continua flat, com cherry como destaque.
