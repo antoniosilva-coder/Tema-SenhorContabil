@@ -2,7 +2,7 @@
 
 Extensão corporativa Manifest V3 para nova guia e políticas internas do Chrome.
 
-**Versão:** `1.7.1`  
+**Versão:** `1.7.3`  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ## Recursos
@@ -16,7 +16,12 @@ Extensão corporativa Manifest V3 para nova guia e políticas internas do Chrome
 
 ## Lista TXT
 
-A forma recomendada para uma lista grande é hospedar um `.txt` por HTTPS (por exemplo no GitHub Pages) e informar a URL na **Política para extensões**.
+A lista global usa duas camadas por padrão:
+
+- `extension/blocklist-default.txt`: fallback local dentro do CRX;
+- `https://antoniosilva-coder.github.io/Tema-SenhorContabil/blocklist.txt`: lista remota atualizável sem republicar o CRX.
+
+A URL remota já vem configurada por padrão. O Google Admin pode substituí-la usando `listaBloqueioUrl`.
 
 ```json
 {
@@ -65,7 +70,7 @@ O mínimo confiável é `30`. A chave antiga `intervaloAtualizacaoListaMinutos` 
 
 ## Lista padrão embutida
 
-O arquivo `extension/blocklist-default.txt` faz parte da extensão. Edite-o antes de gerar o CRX para definir bloqueios que devem existir mesmo sem internet.
+O arquivo `extension/blocklist-default.txt` faz parte da extensão e nesta versão já contém a lista global de 300 domínios como fallback offline.
 
 Para desativá-lo em um grupo:
 
@@ -106,7 +111,7 @@ Para desativá-lo em um grupo:
 4. nunca publique a chave `.pem`.
 ## Wallpaper
 
-Na v1.7.2 o wallpaper padrão é carregado diretamente do GitHub Pages:
+Na v1.7.3 o wallpaper padrão é carregado diretamente do GitHub Pages:
 
 `https://antoniosilva-coder.github.io/Tema-SenhorContabil/wallpaper-senhor-contabil.png`
 
