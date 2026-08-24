@@ -2,49 +2,41 @@
 
 Extensão corporativa Manifest V3 para nova guia, políticas por setor e bloqueio de sites.
 
-**Versão:** `1.4.0`  
+**Versão:** `1.4.1`  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ## Recursos
 
 - nova guia corporativa com pesquisa, Gemini e atalhos;
 - configuração por `chrome.storage.managed`;
+- bloqueio de sites com tela **Oops!**;
 - wallpaper responsivo;
-- bloqueio de sites e tela **Oops!**;
-- página interna de versão;
-- atualização automática por CRX/XML.
+- página de versão e diagnóstico;
+- atualização automática via CRX/XML.
 
 ## Página de versão
 
-Na pesquisa da própria nova guia, digite:
+Na pesquisa da nova guia:
 
 ```text
 sr://version
 ```
 
-Na barra de endereços, o modo nativo da extensão é:
+Na barra do Chrome, sem instalar protocolo:
 
 ```text
 sr + Espaço + version
 ```
 
-Para aceitar **`sr://version` diretamente na barra de endereços no Windows**, execute:
+Para usar **`sr://version` diretamente na barra de endereços do Windows**, execute uma vez:
 
-```text
-deployment/Instalar-Protocolo-SR.ps1
+```powershell
+.\deployment\Instalar-Protocolo-SR.ps1 -Test
 ```
 
-O script registra o protocolo `sr://` no Windows e abre:
-
-```text
-chrome-extension://blebikojnakioblpeacdnnphclgeeaha/version.html
-```
-
-A primeira chamada pode exibir uma confirmação de protocolo externo, dependendo das políticas do Chrome.
+O instalador registra `sr://` para o usuário atual. Use `-Machine` em PowerShell Administrador para registrar para a máquina.
 
 ## JSON no Google Admin
-
-No campo **Política para extensões**, use `Value`:
 
 ```json
 {
@@ -54,17 +46,19 @@ No campo **Política para extensões**, use `Value`:
 }
 ```
 
-## Publicar atualização
+## v1.4.1
 
-1. mantenha a mesma chave privada da extensão;
+- corrige a sincronização dos bloqueios após atualização/reinício;
+- mantém cache da última política válida durante atraso da política cloud;
+- restaura sincronização ao iniciar o service worker;
+- adiciona tentativas automáticas após instalação/inicialização;
+- corrige `sr://version` no Windows usando uma ponte HTTPS + redirecionamento interno;
+- página de versão mostra sites configurados e regras de bloqueio ativas.
+
+## Publicar
+
+1. mantenha a mesma chave privada `.pem`;
 2. gere o CRX da pasta `extension`;
-3. publique o CRX e o `deployment/updates.xml`.
+3. publique o CRX e `deployment/updates.xml`.
 
 Nunca publique a chave `.pem`.
-
-## v1.4.0
-
-- adiciona `version.html` com versão, ID, setor e Manifest;
-- adiciona comando `sr://version` na pesquisa da nova guia;
-- adiciona atalho de Omnibox `sr` + `version`;
-- inclui instalador opcional do protocolo `sr://` para Windows.
