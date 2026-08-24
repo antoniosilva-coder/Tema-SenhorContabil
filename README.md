@@ -2,7 +2,7 @@
 
 Extensão corporativa Manifest V3 para personalizar a nova guia do Chrome e aplicar configurações por política gerenciada.
 
-**Versão:** `1.3.4`  
+**Versão:** `1.3.5`  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ## Recursos
@@ -17,7 +17,7 @@ Extensão corporativa Manifest V3 para personalizar a nova guia do Chrome e apli
 
 ## Wallpaper responsivo
 
-Na v1.3.4 o wallpaper usa a nova arte 16:9 e `cover`, com enquadramento ancorado na parte inferior. A nova guia e a página **Oops!** usam exatamente a mesma regra de tamanho e posição, então ao abrir um bloqueio o fundo permanece com o mesmo enquadramento da tela anterior. O `wallpaperUrl` continua configurável pelo JSON.
+Na v1.3.5 o wallpaper usa a nova arte 16:9 e `cover`, com enquadramento ancorado na parte inferior. A nova guia e a página **Oops!** usam exatamente a mesma regra de tamanho e posição, então ao abrir um bloqueio o fundo permanece com o mesmo enquadramento da tela anterior. O `wallpaperUrl` continua configurável pelo JSON.
 
 ## JSON no Google Admin
 
@@ -105,7 +105,7 @@ chrome.runtime.getManifest().version
 Deve retornar:
 
 ```text
-1.3.4
+1.3.5
 ```
 
 ## Atualização do CRX
@@ -135,3 +135,11 @@ extension/
 ```
 
 Configurações de exemplo ficam em `deployment/configs-setores/`.
+
+
+## v1.3.5
+
+- Wallpaper principal mantido em proporção 16:9, sem ficar superdimensionado em viewports fora de 16:9.
+- Mesma escala e posição na nova guia e na tela Oops!.
+- Fundo excedente preenchido com cópia desfocada da própria arte.
+- Blur do painel Oops! reforçado.
