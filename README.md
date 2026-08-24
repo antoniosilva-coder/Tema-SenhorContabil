@@ -104,3 +104,11 @@ Para desativá-lo em um grupo:
 2. gere o CRX da pasta `extension`;
 3. publique o CRX e `deployment/updates.xml`;
 4. nunca publique a chave `.pem`.
+## Wallpaper
+
+Na v1.7.2 o wallpaper padrão é carregado diretamente do GitHub Pages:
+
+`https://antoniosilva-coder.github.io/Tema-SenhorContabil/wallpaper-senhor-contabil.png`
+
+A imagem não é mais empacotada no CRX. Para trocar o wallpaper global, substitua esse arquivo no GitHub mantendo o mesmo caminho.
+
