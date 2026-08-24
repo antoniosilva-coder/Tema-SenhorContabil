@@ -2,7 +2,9 @@
 
 Extensão corporativa Manifest V3 para personalização da nova guia por política gerenciada do Chrome.
 
-**Versão:** `1.5.1`  
+**Versão:** `1.5.2`  
+
+**1.5.2:** correção visual dos atalhos para impedir recorte de ícones e efeitos de foco/hover.  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ## Recursos
@@ -16,7 +18,7 @@ Extensão corporativa Manifest V3 para personalização da nova guia por políti
 
 ## Desempenho
 
-A v1.5.1 reduz trabalho e rede na abertura da nova guia:
+A v1.5.2 reduz trabalho e rede na abertura da nova guia:
 
 - wallpaper padrão local em WebP;
 - wallpaper remoto carregado em baixa prioridade;
