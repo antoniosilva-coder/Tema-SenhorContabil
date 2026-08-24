@@ -2,7 +2,7 @@
 
 Extensão corporativa Manifest V3 para nova guia, políticas por setor e bloqueio de sites.
 
-**Versão:** `1.4.1`  
+**Versão:** `1.4.2`  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ## Recursos
@@ -46,14 +46,14 @@ O instalador registra `sr://` para o usuário atual. Use `-Machine` em PowerShel
 }
 ```
 
-## v1.4.1
+## v1.4.2
 
-- corrige a sincronização dos bloqueios após atualização/reinício;
-- mantém cache da última política válida durante atraso da política cloud;
-- restaura sincronização ao iniciar o service worker;
-- adiciona tentativas automáticas após instalação/inicialização;
-- corrige `sr://version` no Windows usando uma ponte HTTPS + redirecionamento interno;
-- página de versão mostra sites configurados e regras de bloqueio ativas.
+- corrige regressão que fazia as regras de bloqueio não serem recriadas de forma confiável;
+- simplifica a sincronização do `declarativeNetRequest`;
+- preserva regras existentes enquanto a política cloud ainda está carregando;
+- sincroniza novamente após início, atualização e mudança de política;
+- aceita domínios, URLs completas, `*.dominio.com` e `*://dominio.com/*`;
+- mantém a página personalizada **Oops!** e a página de versão.
 
 ## Publicar
 
