@@ -1,144 +1,71 @@
 # Tema Senhor Contábil — Chrome
 
-Extensão corporativa Manifest V3 para personalizar a nova guia do Chrome e aplicar configurações por política gerenciada.
+Extensão corporativa Manifest V3 para nova guia, configuração por setor e bloqueio de sites via políticas gerenciadas.
 
-**Versão:** `1.3.7`  
+**Versão:** `1.3.8`  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ## Recursos
 
-- nova guia corporativa;
-- botão principal do Gemini ao lado da pesquisa;
-- wallpaper responsivo, cores, atalhos e menu Google configuráveis;
-- configuração por setor/grupo usando `chrome.storage.managed`;
-- bloqueio de sites por política;
-- exceções de liberação;
-- página personalizada **“Oops!”** para sites bloqueados.
-
-## Wallpaper responsivo
-
-Na v1.3.7 o wallpaper continua em 16:9 com `cover` e enquadramento ancorado na parte inferior. A página **Oops!** mantém a mesma escala/posição da nova guia, mas aplica uma camada escura com blur sobre todo o fundo para a arte ficar discreta e a mensagem de bloqueio ganhar destaque. O `wallpaperUrl` continua configurável pelo JSON.
+- nova guia corporativa com pesquisa, Gemini e atalhos;
+- configuração por `chrome.storage.managed`;
+- wallpaper 16:9 responsivo;
+- bloqueio de sites com exceções;
+- tela personalizada **Oops!**;
+- atualização automática por CRX/XML.
 
 ## JSON no Google Admin
 
-No campo **Política para extensões**, use o formato com `Value`:
+No campo **Política para extensões**, use `Value`:
 
 ```json
 {
-  "setor": {
-    "Value": "Fiscal"
-  },
+  "setor": { "Value": "Fiscal" },
   "sitesBloqueados": {
-    "Value": [
-      "web.whatsapp.com",
-      "discord.com"
-    ]
+    "Value": ["web.whatsapp.com", "discord.com"]
   },
-  "sitesLiberados": {
-    "Value": []
-  },
-  "mensagemBloqueio": {
-    "Value": "Este site foi bloqueado pela Senhor Contábil devido às políticas internas."
-  }
+  "sitesLiberados": { "Value": [] }
 }
 ```
 
-No `schema.json` e dentro da extensão, os valores continuam **sem `Value`**.
+Dentro da extensão e no `schema.json`, os valores continuam sem `Value`.
 
-O botão do Gemini vem ativo por padrão. Para ocultar ou trocar o endereço:
-
-```json
-{
-  "mostrarGemini": { "Value": true },
-  "geminiUrl": { "Value": "https://gemini.google.com/" }
-}
-```
-
-## Bloqueio de sites
-
-Use somente domínios, por exemplo:
-
-```text
-web.whatsapp.com
-discord.com
-instagram.com
-```
-
-`sitesLiberados` tem prioridade sobre `sitesBloqueados`.
-
-Exemplo:
-
-```json
-{
-  "sitesBloqueados": {
-    "Value": ["discord.com", "web.whatsapp.com"]
-  },
-  "sitesLiberados": {
-    "Value": ["web.whatsapp.com"]
-  }
-}
-```
-
-Resultado: Discord é bloqueado e WhatsApp é liberado.
-
-> Para exibir a página personalizada da extensão, não bloqueie o mesmo endereço também pelo `URLBlocklist` do Chrome.
-
-## Aplicar e validar
+## Validar
 
 Após salvar a política:
 
-1. abra `chrome://policy`;
-2. clique em **Recarregar políticas**;
-3. reinicie o Chrome se necessário;
-4. na nova guia, confira:
+1. abra `chrome://policy` e recarregue as políticas;
+2. abra uma nova guia;
+3. no console da extensão, execute:
 
 ```javascript
 chrome.storage.managed.get(null, console.log)
 ```
 
-Para confirmar a versão:
+Versão instalada:
 
 ```javascript
 chrome.runtime.getManifest().version
 ```
 
-Deve retornar:
+## Publicar atualização
 
-```text
-1.3.7
-```
+1. aumente a versão no `manifest.json`;
+2. gere o CRX com a **mesma chave privada**;
+3. atualize `deployment/updates.xml`;
+4. publique CRX e XML.
 
-## Atualização do CRX
+Nunca publique a chave `.pem`.
 
-Ao publicar uma nova versão:
+## v1.3.8
 
-1. aumente `version` no `manifest.json`;
-2. gere o CRX usando a **mesma chave privada** das versões anteriores;
-3. atualize a versão em `deployment/updates.xml`;
-4. publique o CRX e o XML no endereço configurado.
-
-Nunca publique ou compartilhe a chave `.pem`.
-
-## Estrutura principal
-
-```text
-extension/
-├── manifest.json
-├── schema.json
-├── service-worker.js
-├── blocked.html
-├── blocked.css
-├── blocked.js
-├── newtab.html
-├── newtab.js
-└── config-default.js
-```
-
-Configurações de exemplo ficam em `deployment/configs-setores/`.
-
-## v1.3.7
-
-- Mantém o wallpaper 16:9 em `cover`, sem barras laterais.
-- Nova guia e Oops! usam o mesmo enquadramento.
-- No Oops!, o fundo inteiro fica escurecido e desfocado; o wallpaper aparece apenas de forma sutil.
-- Painel de bloqueio continua flat, com cherry como destaque.
+- remove renderizações e timers desnecessários na nova guia;
+- relógio atualiza por minuto e pausa quando a guia não está visível;
+- elimina carregamento duplicado do wallpaper e mantém fallback local;
+- reduz operações DOM ao montar atalhos e menu;
+- evita ressincronizar regras de bloqueio quando outras políticas mudam;
+- não regrava regras DNR quando elas já estão corretas;
+- reduz exceções redundantes nas regras de bloqueio;
+- evita sincronizações concorrentes do service worker;
+- recomprime o wallpaper local sem perda de qualidade;
+- preserva o visual e o comportamento da v1.3.7.
