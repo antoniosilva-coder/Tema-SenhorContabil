@@ -2,18 +2,22 @@
 
 Extensão corporativa Manifest V3 para personalizar a nova guia do Chrome e aplicar configurações por política gerenciada.
 
-**Versão:** `1.3.0`  
+**Versão:** `1.3.4`  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 ## Recursos
 
 - nova guia corporativa;
 - botão principal do Gemini ao lado da pesquisa;
-- wallpaper, cores, atalhos e menu Google configuráveis;
+- wallpaper responsivo, cores, atalhos e menu Google configuráveis;
 - configuração por setor/grupo usando `chrome.storage.managed`;
 - bloqueio de sites por política;
 - exceções de liberação;
 - página personalizada **“Oops!”** para sites bloqueados.
+
+## Wallpaper responsivo
+
+Na v1.3.4 o wallpaper usa a nova arte 16:9 e `cover`, com enquadramento ancorado na parte inferior. A nova guia e a página **Oops!** usam exatamente a mesma regra de tamanho e posição, então ao abrir um bloqueio o fundo permanece com o mesmo enquadramento da tela anterior. O `wallpaperUrl` continua configurável pelo JSON.
 
 ## JSON no Google Admin
 
@@ -101,7 +105,7 @@ chrome.runtime.getManifest().version
 Deve retornar:
 
 ```text
-1.3.0
+1.3.4
 ```
 
 ## Atualização do CRX
