@@ -1,119 +1,103 @@
 # Tema Senhor Contábil — Chrome
 
-Extensão corporativa Manifest V3 para nova guia e políticas internas do Chrome.
-
-**Versão:** `1.7.3`  
+**Versão:** `1.7.4`  
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
-## Recursos
+Extensão corporativa Manifest V3 para nova guia, configuração por setor e bloqueio de sites.
 
-- nova guia corporativa com pesquisa, Gemini e atalhos;
-- configuração por `chrome.storage.managed`;
-- bloqueio de sites com página **Oops!** personalizada;
-- lista manual pelo JSON + lista TXT padrão + lista TXT remota;
-- exceções por `sitesLiberados`;
-- atualização automática da lista TXT remota sem republicar o CRX.
+## Bloqueio
 
-## Lista TXT
+O bloqueio final é formado por:
 
-A lista global usa duas camadas por padrão:
+1. `extension/blocklist-default.txt` — fallback local do CRX;
+2. `blocklist.txt` remoto — atualizado sem republicar o CRX;
+3. `sitesBloqueados` — regras adicionais do setor;
+4. `sitesLiberados` — exceções, com prioridade sobre bloqueios.
 
-- `extension/blocklist-default.txt`: fallback local dentro do CRX;
-- `https://antoniosilva-coder.github.io/Tema-SenhorContabil/blocklist.txt`: lista remota atualizável sem republicar o CRX.
+URL remota padrão:
 
-A URL remota já vem configurada por padrão. O Google Admin pode substituí-la usando `listaBloqueioUrl`.
+`https://antoniosilva-coder.github.io/Tema-SenhorContabil/blocklist.txt`
 
-```json
-{
-  "listaBloqueioUrl": {
-    "Value": "https://antoniosilva-coder.github.io/Tema-SenhorContabil/blocklist.txt"
-  },
-  "intervaloAtualizacaoListaSegundos": {
-    "Value": 30
-  }
-}
-```
+O Chrome aplica as regras pelo `declarativeNetRequest`; não há JavaScript verificando cada clique.
 
-O TXT aceita uma entrada por linha:
+## TXT
+
+Uma entrada por linha:
 
 ```text
 discord.com
 *.facebook.com
 203.0.113.10
 https://exemplo.com/caminho
-0.0.0.0 exemplo.com
-||outroexemplo.com^
+0.0.0.0 ads.exemplo.com
+||tracker.exemplo.com^
 ```
 
-Linhas iniciadas por `#`, `;`, `!` ou `//` são ignoradas.
+Também aceita liberações opcionais:
 
-`sitesLiberados` sempre tem prioridade sobre a lista padrão, a lista remota e `sitesBloqueados`.
+```text
+[ALLOW]
+drive.google.com
 
-## Atualização rápida
-
-- mudanças em `chrome.storage.managed` são aplicadas imediatamente pelo evento do Chrome;
-- a extensão relê o JSON a cada **30 segundos** como segurança;
-- o TXT remoto é verificado a cada **30 segundos** por padrão;
-- o TXT é solicitado com cache desativado e um parâmetro anti-cache;
-- se o conteúdo não mudou, as regras DNR não são recriadas;
-- abrir uma Nova Guia dispara uma reconciliação adicional sem atrasar a interface.
-
-Para alterar o intervalo do TXT:
-
-```json
-{
-  "intervaloAtualizacaoListaSegundos": { "Value": 30 }
-}
+[BLOCK]
+google.com
 ```
 
-O mínimo confiável é `30`. A chave antiga `intervaloAtualizacaoListaMinutos` continua aceita por compatibilidade.
+ou:
 
-## Lista padrão embutida
-
-O arquivo `extension/blocklist-default.txt` faz parte da extensão e nesta versão já contém a lista global de 300 domínios como fallback offline.
-
-Para desativá-lo em um grupo:
-
-```json
-{
-  "usarListaBloqueioPadrao": { "Value": false }
-}
+```text
+@@||drive.google.com^
 ```
 
-## Exemplo completo
+Comentários iniciados por `#`, `;`, `!` ou `//` são ignorados. CIDR (`10.0.0.0/24`) não é suportado; use IPs individuais.
+
+## Sincronização
+
+- alteração do JSON gerenciado: imediata;
+- reconciliação de segurança: a cada 30 s;
+- TXT remoto: verificado a cada 30 s por padrão;
+- falha de rede: mantém a última lista remota válida;
+- regras antigas de versões anteriores são limpas automaticamente.
+
+## Exemplo Google Admin
 
 ```json
 {
   "setor": { "Value": "Fiscal" },
   "bloqueioAtivo": { "Value": true },
   "usarListaBloqueioPadrao": { "Value": true },
-  "listaBloqueioUrl": {
-    "Value": "https://antoniosilva-coder.github.io/Tema-SenhorContabil/blocklist.txt"
-  },
   "intervaloAtualizacaoListaSegundos": { "Value": 30 },
   "sitesBloqueados": {
     "Value": ["discord.com"]
   },
   "sitesLiberados": {
-    "Value": ["discord.com.br"]
-  },
-  "mensagemBloqueio": {
-    "Value": "Se você precisa deste acesso para o trabalho, solicite ao seu gestor que abra uma solicitação para o setor de TI."
+    "Value": []
   }
 }
 ```
 
-## Publicar
+## Diagnóstico
 
-1. mantenha a mesma chave privada `.pem`;
-2. gere o CRX da pasta `extension`;
-3. publique o CRX e `deployment/updates.xml`;
-4. nunca publique a chave `.pem`.
+No console da extensão:
+
+```javascript
+chrome.runtime.sendMessage({type: "senhor-contabil:get-blocking-status"}).then(console.log)
+```
+
+Para ver as regras carregadas:
+
+```javascript
+chrome.declarativeNetRequest.getDynamicRules().then(r => console.log(r.length, r.slice(0, 5)))
+```
+
 ## Wallpaper
 
-Na v1.7.3 o wallpaper padrão é carregado diretamente do GitHub Pages:
+É carregado do GitHub Pages, não do CRX:
 
 `https://antoniosilva-coder.github.io/Tema-SenhorContabil/wallpaper-senhor-contabil.png`
 
-A imagem não é mais empacotada no CRX. Para trocar o wallpaper global, substitua esse arquivo no GitHub mantendo o mesmo caminho.
+## Publicar
 
+1. gere o CRX da pasta `extension` usando a mesma `.pem`;
+2. publique `tema-senhor-contabil.crx` e `deployment/updates.xml`;
+3. nunca publique a chave `.pem`.
