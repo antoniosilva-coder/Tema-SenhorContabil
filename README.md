@@ -1,6 +1,15 @@
 # Tema Senhor Contábil — Chrome
 
-**Versão:** `1.7.4`  
+**Versão:** `1.7.5`  
+
+## Correção v1.7.5
+
+- Corrigido o redirecionamento das regras DNR da blocklist padrão para `blocked.html`.
+- O parâmetro do site bloqueado agora usa uma URL interna completa, sem query dentro de `extensionPath`.
+- Adicionado modo de segurança *fail-closed*: se um redirecionamento for rejeitado pelo Chrome, as regras são reaplicadas como bloqueio direto.
+- Cache de sincronização elevado para V5 para forçar uma reconciliação limpa após a atualização.
+- A blocklist local é aplicada antes da consulta remota; a lista remota possui timeout e não pode mais atrasar o bloqueio padrão.
+
 **ID:** `blebikojnakioblpeacdnnphclgeeaha`
 
 Extensão corporativa Manifest V3 para nova guia, configuração por setor e bloqueio de sites.

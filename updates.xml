@@ -3,6 +3,6 @@
   <app appid="blebikojnakioblpeacdnnphclgeeaha">
     <updatecheck
       codebase="https://antoniosilva-coder.github.io/Tema-SenhorContabil/tema-senhor-contabil.crx"
-      version="1.7.4" />
+      version="1.7.5" />
   </app>
 </gupdate>
