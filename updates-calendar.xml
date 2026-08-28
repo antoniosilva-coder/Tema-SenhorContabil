@@ -2,7 +2,7 @@
 <gupdate xmlns="http://www.google.com/update2/response" protocol="2.0">
   <app appid="aglndmfonndcfhobpogadneedafcknad">
     <updatecheck
-      codebase="https://antoniosilva-coder.github.io/Tema-SenhorContabil/tema-senhor-contabil-calendario.crx"
+      codebase="https://antoniosilva-coder.github.io/Tema-SenhorContabil/tema-senhor-contabil-beta.crx"
       version="1.7.5.1" />
   </app>
 </gupdate>
