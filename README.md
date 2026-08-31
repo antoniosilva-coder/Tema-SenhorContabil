@@ -1,6 +1,13 @@
 # Tema Senhor Contábil — Chrome
 
-**Versão:** `1.7.5`  
+**Versão:** `1.7.6`  
+
+## Novidade v1.7.6
+
+- Adicionado `config-geral.json` remoto, publicado junto da extensão.
+- As listas gerais remotas agora são somadas automaticamente às listas específicas de cada setor no Google Admin.
+- `sitesBloqueados` e `sitesLiberados` continuam compatíveis com os JSONs já existentes.
+- As liberações gerais e do setor vencem todas as fontes de bloqueio.
 
 ## Correção v1.7.5
 
@@ -20,12 +27,17 @@ O bloqueio final é formado por:
 
 1. `extension/blocklist-default.txt` — fallback local do CRX;
 2. `blocklist.txt` remoto — atualizado sem republicar o CRX;
-3. `sitesBloqueados` — regras adicionais do setor;
-4. `sitesLiberados` — exceções, com prioridade sobre bloqueios.
+3. `sitesBloqueadosGerais` — regras do `config-geral.json` remoto;
+4. `sitesBloqueados` — regras adicionais do setor;
+5. `sitesLiberadosGerais` + `sitesLiberados` — exceções gerais e do setor, com prioridade sobre bloqueios.
 
 URL remota padrão:
 
 `https://antoniosilva-coder.github.io/Tema-SenhorContabil/blocklist.txt`
+
+Configuração geral remota:
+
+`https://antoniosilva-coder.github.io/Tema-SenhorContabil/config-geral.json`
 
 O Chrome aplica as regras pelo `declarativeNetRequest`; não há JavaScript verificando cada clique.
 
@@ -64,11 +76,21 @@ Comentários iniciados por `#`, `;`, `!` ou `//` são ignorados. CIDR (`10.0.0.0
 
 - alteração do JSON gerenciado: imediata;
 - reconciliação de segurança: a cada 30 s;
+- `config-geral.json`: verificado a cada 30 s e mantido em cache se a rede falhar;
 - TXT remoto: verificado a cada 30 s por padrão;
 - falha de rede: mantém a última lista remota válida;
 - regras antigas de versões anteriores são limpas automaticamente.
 
-## Exemplo Google Admin
+## Exemplo geral no GitHub
+
+```json
+{
+  "sitesBloqueadosGerais": ["facebook.com"],
+  "sitesLiberadosGerais": []
+}
+```
+
+## Exemplo do setor no Google Admin
 
 ```json
 {
@@ -108,5 +130,5 @@ chrome.declarativeNetRequest.getDynamicRules().then(r => console.log(r.length, r
 ## Publicar
 
 1. gere o CRX da pasta `extension` usando a mesma `.pem`;
-2. publique `tema-senhor-contabil.crx` e `deployment/updates.xml`;
+2. publique `tema-senhor-contabil.crx`, `deployment/updates.xml` e `config-geral.json`;
 3. nunca publique a chave `.pem`.
