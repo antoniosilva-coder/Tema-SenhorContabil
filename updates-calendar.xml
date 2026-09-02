@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gupdate xmlns="http://www.google.com/update2/response" protocol="2.0">
-  <app appid="aglndmfonndcfhobpogadneedafcknad">
+  <app appid="blebikojnakioblpeacdnnphclgeeaha">
     <updatecheck
-      codebase="https://antoniosilva-coder.github.io/Tema-SenhorContabil/tema-senhor-contabil-beta.crx"
-      version="1.7.5.1" />
+      codebase="https://antoniosilva-coder.github.io/Tema-SenhorContabil/tema-senhor-contabil.crx"
+      version="1.7.7" />
   </app>
 </gupdate>
