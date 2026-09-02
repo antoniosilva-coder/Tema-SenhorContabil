@@ -1,6 +1,6 @@
-# Tema Senhor Contábil — v1.7.6.1 (arquitetura robusta)
+# Tema Senhor Contábil — v1.7.6.2 (arquitetura robusta)
 
-Esta versão foi construída diretamente sobre a v1.7.6 e preserva a nova guia original. A alteração principal é a arquitetura de políticas e o mecanismo de bloqueio.
+Esta versão preserva a nova guia original. A alteração principal é a arquitetura de políticas e o mecanismo de bloqueio.
 
 ## O que mudou
 
