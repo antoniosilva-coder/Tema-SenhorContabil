@@ -1,134 +1,32 @@
-# Tema Senhor Contábil — Chrome
+# Tema Senhor Contábil — v1.7.6.1 (arquitetura robusta)
 
-**Versão:** `1.7.6`  
+Esta versão foi construída diretamente sobre a v1.7.6 e preserva a nova guia original. A alteração principal é a arquitetura de políticas e o mecanismo de bloqueio.
 
-## Novidade v1.7.6
+## O que mudou
 
-- Adicionado `config-geral.json` remoto, publicado junto da extensão.
-- As listas gerais remotas agora são somadas automaticamente às listas específicas de cada setor no Google Admin.
-- `sitesBloqueados` e `sitesLiberados` continuam compatíveis com os JSONs já existentes.
-- As liberações gerais e do setor vencem todas as fontes de bloqueio.
+- Precedência determinística: obrigatório > bloqueio específico > liberação do perfil > bloqueio geral.
+- A lista empacotada passa a ser tratada como bloqueio obrigatório.
+- Allowlists em arquivos gerais/remotos são ignoradas por segurança.
+- Grupos do Google Admin são usados para exceções por perfil de acesso.
+- Tentativas de grupos comuns desligarem a proteção ou trocarem URLs de infraestrutura são ignoradas por padrão.
+- Cache fail-closed: falha remota preserva última configuração válida.
+- Até 4.500 bloqueios exibem a página corporativa; excedentes continuam bloqueados diretamente.
+- Página local de diagnóstico e teste de domínio.
+- Cache da configuração geral compartilhado por 30 s, reduzindo requisições desnecessárias ao abrir novas guias.
 
-## Correção v1.7.5
+## Arquivos importantes
 
-- Corrigido o redirecionamento das regras DNR da blocklist padrão para `blocked.html`.
-- O parâmetro do site bloqueado agora usa uma URL interna completa, sem query dentro de `extensionPath`.
-- Adicionado modo de segurança *fail-closed*: se um redirecionamento for rejeitado pelo Chrome, as regras são reaplicadas como bloqueio direto.
-- Cache de sincronização elevado para V5 para forçar uma reconciliação limpa após a atualização.
-- A blocklist local é aplicada antes da consulta remota; a lista remota possui timeout e não pode mais atrasar o bloqueio padrão.
+- `ARQUITETURA-GRUPOS-E-POLITICAS.md` — desenho recomendado de grupos.
+- `CONFIGURAR-POR-SETOR.md` — exemplos rápidos.
+- `DIAGNOSTICO-E-PROBLEMAS.md` — sintomas e correções.
+- `deployment/configs-grupos/` — JSONs prontos para os perfis.
+- `config-geral.json` — configuração geral publicada no GitHub Pages.
+- `extension/config-geral-default.json` — cópia empacotada para primeira execução/falha remota.
 
-**ID:** `blebikojnakioblpeacdnnphclgeeaha`
+## ID da extensão
 
-Extensão corporativa Manifest V3 para nova guia, configuração por setor e bloqueio de sites.
+A chave do manifesto foi preservada, portanto o ID continua sendo:
 
-## Bloqueio
+`blebikojnakioblpeacdnnphclgeeaha`
 
-O bloqueio final é formado por:
-
-1. `extension/blocklist-default.txt` — fallback local do CRX;
-2. `blocklist.txt` remoto — atualizado sem republicar o CRX;
-3. `sitesBloqueadosGerais` — regras do `config-geral.json` remoto;
-4. `sitesBloqueados` — regras adicionais do setor;
-5. `sitesLiberadosGerais` + `sitesLiberados` — exceções gerais e do setor, com prioridade sobre bloqueios.
-
-URL remota padrão:
-
-`https://antoniosilva-coder.github.io/Tema-SenhorContabil/blocklist.txt`
-
-Configuração geral remota:
-
-`https://antoniosilva-coder.github.io/Tema-SenhorContabil/config-geral.json`
-
-O Chrome aplica as regras pelo `declarativeNetRequest`; não há JavaScript verificando cada clique.
-
-## TXT
-
-Uma entrada por linha:
-
-```text
-discord.com
-*.facebook.com
-203.0.113.10
-https://exemplo.com/caminho
-0.0.0.0 ads.exemplo.com
-||tracker.exemplo.com^
-```
-
-Também aceita liberações opcionais:
-
-```text
-[ALLOW]
-drive.google.com
-
-[BLOCK]
-google.com
-```
-
-ou:
-
-```text
-@@||drive.google.com^
-```
-
-Comentários iniciados por `#`, `;`, `!` ou `//` são ignorados. CIDR (`10.0.0.0/24`) não é suportado; use IPs individuais.
-
-## Sincronização
-
-- alteração do JSON gerenciado: imediata;
-- reconciliação de segurança: a cada 30 s;
-- `config-geral.json`: verificado a cada 30 s e mantido em cache se a rede falhar;
-- TXT remoto: verificado a cada 30 s por padrão;
-- falha de rede: mantém a última lista remota válida;
-- regras antigas de versões anteriores são limpas automaticamente.
-
-## Exemplo geral no GitHub
-
-```json
-{
-  "sitesBloqueadosGerais": ["facebook.com"],
-  "sitesLiberadosGerais": []
-}
-```
-
-## Exemplo do setor no Google Admin
-
-```json
-{
-  "setor": { "Value": "Fiscal" },
-  "bloqueioAtivo": { "Value": true },
-  "usarListaBloqueioPadrao": { "Value": true },
-  "intervaloAtualizacaoListaSegundos": { "Value": 30 },
-  "sitesBloqueados": {
-    "Value": ["discord.com"]
-  },
-  "sitesLiberados": {
-    "Value": []
-  }
-}
-```
-
-## Diagnóstico
-
-No console da extensão:
-
-```javascript
-chrome.runtime.sendMessage({type: "senhor-contabil:get-blocking-status"}).then(console.log)
-```
-
-Para ver as regras carregadas:
-
-```javascript
-chrome.declarativeNetRequest.getDynamicRules().then(r => console.log(r.length, r.slice(0, 5)))
-```
-
-## Wallpaper
-
-É carregado do GitHub Pages, não do CRX:
-
-`https://antoniosilva-coder.github.io/Tema-SenhorContabil/wallpaper-senhor-contabil.png`
-
-## Publicar
-
-1. gere o CRX da pasta `extension` usando a mesma `.pem`;
-2. publique `tema-senhor-contabil.crx`, `deployment/updates.xml` e `config-geral.json`;
-3. nunca publique a chave `.pem`.
+Ao publicar uma atualização CRX, use a mesma chave privada PEM da versão atual.
