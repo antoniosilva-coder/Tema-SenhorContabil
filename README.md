@@ -1,4 +1,4 @@
-# Tema Senhor Contábil — v1.7.6.3 (arquitetura robusta)
+# Tema Senhor Contábil — v1.7.6.4 (arquitetura robusta)
 
 Esta versão preserva a nova guia original. A alteração principal é a arquitetura de políticas e o mecanismo de bloqueio.
 
@@ -30,7 +30,3 @@ A chave do manifesto foi preservada, portanto o ID continua sendo:
 `blebikojnakioblpeacdnnphclgeeaha`
 
 Ao publicar uma atualização CRX, use a mesma chave privada PEM da versão atual.
-
-
-## Versão 1.7.6.3 — Sem bloqueio
-Esta versão mantém a instalação/deployment da extensão, mas não possui funcionalidade de bloqueio, allowlist ou redirecionamento de sites.
